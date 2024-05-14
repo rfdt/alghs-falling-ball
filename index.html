@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Симуляция мяча</title>
+    <style>
+        .innerDiv > input {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1 style="text-align: center">Метод интегрирования Эйлера для моделирования плоского движения мяча с учетом <br/>
+    притяжения земли и сопротивления воздуха, силы упругости.
+</h1>
+<div class="Theory__Container" style="margin-bottom: 10px">
+    <h2>Теория</h2>
+    <h4>Интегрирование уравнений движения</h4>
+    Из курса старшей школы или вуза, вспоминаем что сила равна произведению массы на ускорение.
+    <code style="display: block; font-size: 22px; margin: 10px 0">F = m * a</code>
+    Преобразуем это уравнение и увидим, что ускорение равно силе, делённой на массу.
+    <code style="display: block; font-size: 22px; margin: 10px 0">a = F / m</code>
+    Ускорение — это темп изменения скорости от времени:
+    <code style="display: block; font-size: 22px; margin: 10px 0">dv/dt = a = F/m</code>
+    Аналогично, скорость — это темп изменения позиции от времени:
+    <code style="display: block; font-size: 22px; margin: 10px 0">dx/dt = v</code>
+
+    Давайте назовём наше текущее время t, а шаг времени dt или «delta time».
+    Теперь мы можем представить уравнения движения в понятном всем виде:
+    <code style="display: block; font-size: 22px; margin: 10px 0">ускорение = сила / масса</code>
+    <code style="display: block; font-size: 22px; margin: 10px 0">изменение позиции = скорость * dt</code>
+    <code style="display: block; font-size: 22px; margin: 10px 0"> изменение скорости = ускорение * dt</code>
+
+    Исходный код: <a href="https://github.com/">https://github.com/</a>
+</div>
+<div class="Theory__Container" style="margin-bottom: 10px">
+    <h2>Имплементация</h2>
+
+    <ul>
+        <li>Строка 2-6 получение элементов из HTML разметки</li>
+        <li>Строка 10 таймер времени</li>
+        <li>Строка 12-25 оъект мяча со свойствами, полученными из полей для ввода</li>
+        <li>Строка 27-32 функция для отрисовки мяча на поле</li>
+        <li>Строка 38-42  считаем ускорение по оси X как V(скорость) = ускорение на шаг интегрирования(время). Учитываем только силу сопротивления воздуха</li>
+        <li>Строка 46-50 считаем ускорение по оси Y, с учетом сопр.воздуха и силы земного.притяжения(ускорение от гравитации земли всегда направлено вниз)</li>
+        <li>Строка 55,56 добавляем приращение координаты. Как скорость * dt </li>
+        <li>Строки 59-80 учитываем столкновение со стенами. Соответствующую скорость уменьшаем на коэффициент упругости</li>
+        <li>Строки 90-99 считаем силу сопротивления воздуха(сила лобового сопротивления). </li>
+        <li>   <img src="./img/img.png" style="width: 150px;"></li>
+        <li>Так-как высчитывается и отрисовывается движение 60 раз в секунду. То dt=1(с)/60</li>
+        <li>Размер поля равен 800м на 600м. Мяч вылетает с высоты равной 590м</li>
+        <li>При стандартных условиях. deg=90(начальный угол броска), v0=0м/c, m=1кг, p=1кг/м^3. Время полета мяча ≈ 11с</li>
+    </ul>
+</div>
+<canvas id="canvas" width="800" height="600" style="border: 2px solid black"></canvas>
+<div>Скорость по X: <span id="speedX">0</span></div>
+<div>Скорость по Y: <span id="speedY">0</span></div>
+<div style="margin-bottom: 10px">Время с запуска: <span id="timeFromStart">0</span></div>
+<div>
+    <input type="button" id="applyBtn" value="Запустить">
+    <div class="innerDiv">
+        <label>Масса мяча (в кг):</label>
+        <input type="number" id="mass" value="1">
+        <br>
+        <label>Начальная скорость (в м/с):</label>
+        <input type="number" id="velocity" value="0">
+        <br>
+        <label>Начальный угол броска (в градусах):</label>
+        <input type="number" id="angle" value="90">
+        <br>
+        <label>Гравитационная постоянная (в м/с^2):</label>
+        <input type="number" id="gravity" value="9.81">
+        <br>
+        <label>Упругость мяча:</label>
+        <input type="number" id="elasticity" value="0.8">
+        <br>
+        <label>Плотность воздуха(в Кг/м^3):</label>
+        <input type="number" id="airResistance" value="1">
+    </div>
+</div>
+<script src="index.js"></script>
+</body>
+</html>
